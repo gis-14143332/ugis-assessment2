@@ -23,6 +23,9 @@ import cartopy.crs as ccrs
 import contextily as cx
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.patches import PathPatch
+
+
 
 #basic rule
 map_standard = "EPSG:3857"
@@ -108,7 +111,9 @@ twitter_data.plot(ax=left_map, color='#00008B', markersize=40, marker='x', alpha
 make_map_pretty(right_map, "B.Redistributed Surface(Weighted Aalysis)")
 #Stretching legend
 red_color_map = LinearSegmentedColormap.from_list("MyReds", ["#ffffff", "#ffcccc", "#ff4d4d"]) 
-
+#mask clip
+clipping_mask = PathPatch(shape_to_drawing_path(city_districts.geometry.unary_union), transform=right_map.transData, fc='none', ec='none')
+right_map.add_patch(clipping_mask) 
 
 # --- NO CODE BELOW HERE ---
 
