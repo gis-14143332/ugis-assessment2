@@ -18,6 +18,8 @@ import rasterio
 import random
 from shapely.geometry import Point, Polygon, MultiPolygon
 from matplotlib.path import Path
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
 
 #basic rule
 map_standard = "EPSG:3857"
@@ -73,7 +75,11 @@ with rasterio.open(find_my_file("100m_pop_2019.tif")) as pop_img:
         final_new_dots.append(max(best_candidates, key=lambda x: x[1])[0]) # choose the point with highest weight
         
 redistributed_result = combined_data.copy().set_geometry(final_new_dots)#update new coordination       
-        
+
+#output
+#big map to compare
+fig, (left_map, right_map) = plt.subplots(1, 2, figsize=(24, 12), subplot_kw={'projection': ccrs.Mercator()}) 
+map_view_limit = city_districts.total_bounds #extension   
         
         
 # --- NO CODE BELOW HERE ---
