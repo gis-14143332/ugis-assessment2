@@ -98,6 +98,10 @@ def make_map_pretty(ax, main_title):
     gl.top_labels = gl.right_labels = False 
     gl.ylabel_style = {'rotation': 90} # Y grid number vertical
     gl.xformatter, gl.yformatter = LONGITUDE_FORMATTER, LATITUDE_FORMATTER #set auto coordinate unit
+    
+# false hotspot left
+make_map_pretty(left_map, "A. Original Data: False Hotspots")
+twitter_data.plot(ax=left_map, color='#00008B', markersize=40, marker='x', alpha=0.8, zorder=6) 
         
         
 # --- NO CODE BELOW HERE ---
