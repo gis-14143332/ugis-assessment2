@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import contextily as cx
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from matplotlib.colors import LinearSegmentedColormap
 
 #basic rule
 map_standard = "EPSG:3857"
@@ -103,7 +104,12 @@ def make_map_pretty(ax, main_title):
 make_map_pretty(left_map, "A. Original Data: False Hotspots")
 twitter_data.plot(ax=left_map, color='#00008B', markersize=40, marker='x', alpha=0.8, zorder=6) 
         
-        
+# right map: redistribute
+make_map_pretty(right_map, "B.Redistributed Surface(Weighted Aalysis)")
+#Stretching legend
+red_color_map = LinearSegmentedColormap.from_list("MyReds", ["#ffffff", "#ffcccc", "#ff4d4d"]) 
+
+
 # --- NO CODE BELOW HERE ---
 
 # report runtime
