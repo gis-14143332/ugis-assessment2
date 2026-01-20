@@ -24,7 +24,7 @@ import contextily as cx
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import PathPatch
-
+import seaborn as sns
 
 
 #basic rule
@@ -112,6 +112,14 @@ make_map_pretty(right_map, "B.Redistributed Surface(Weighted Aalysis)")
 #Stretching legend
 red_color_map = LinearSegmentedColormap.from_list("MyReds", ["#ffffff", "#ffcccc", "#ff4d4d"]) 
 #mask clip
+clipping_mask = PathPatch(shape_to_drawing_path(city_districts.geometry.unary_union), transform=right_map.transData, fc='none', ec='none')
+right_map.add_patch(clipping_mask) 
+
+# Filled thermal surface,30 levels
+kde_surface = sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y, ax=right_map, fill=True, levels=30, cmap=red_color_map, alpha=0.9, zorder=2)
+# contour lines
+sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y, ax=right_map, fill=False, levels=30, color='#DE6954', lw=0.5, alpha=0.6, zorder=2.5)
+#clip
 clipping_mask = PathPatch(shape_to_drawing_path(city_districts.geometry.unary_union), transform=right_map.transData, fc='none', ec='none')
 right_map.add_patch(clipping_mask) 
 
