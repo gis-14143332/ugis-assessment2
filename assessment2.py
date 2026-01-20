@@ -124,6 +124,9 @@ sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y
 color_axis = make_axes_locatable(right_map).append_axes("right", size="3%", pad=0.1, axes_class=plt.Axes)
 plt.colorbar(plt.cm.ScalarMappable(cmap=red_color_map), cax=color_axis, label='Estimated Interes Density') 
 
+# restrain to roi
+for collection in kde_surface.collections + right_map.collections: 
+    collection.set_clip_path(clipping_mask) 
 
 
 # --- NO CODE BELOW HERE ---
