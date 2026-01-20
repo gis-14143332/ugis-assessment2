@@ -21,6 +21,8 @@ from matplotlib.path import Path
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import contextily as cx
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+
 #basic rule
 map_standard = "EPSG:3857"
 
@@ -89,7 +91,13 @@ def make_map_pretty(ax, main_title):
     cx.add_basemap(ax, crs=map_standard, source=cx.providers.CartoDB.Positron) 
     #add roi line & titiel
     city_districts.plot(ax=ax, facecolor='none', edgecolor='#444444', lw=1, zorder=3) # draw roi line
-    ax.set_title(main_title, fontsize=16, fontweight='bold', pad=15)   
+    ax.set_title(main_title, fontsize=16, fontweight='bold', pad=15)  
+    
+    # draw gird
+    gl = ax.gridlines(draw_labels=True, linewidth=0, alpha=0) 
+    gl.top_labels = gl.right_labels = False 
+    gl.ylabel_style = {'rotation': 90} # Y grid number vertical
+    gl.xformatter, gl.yformatter = LONGITUDE_FORMATTER, LATITUDE_FORMATTER #set auto coordinate unit
         
         
 # --- NO CODE BELOW HERE ---
