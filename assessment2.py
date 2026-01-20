@@ -130,6 +130,12 @@ for collection in kde_surface.collections + right_map.collections:
 # add redistributed plots on hotspot
 redistributed_result.plot(ax=right_map, color='#2c2c2c', markersize=1.5, alpha=0.4, zorder=5) 
 
+# add north arrow & 10 km scla bar
+right_map.annotate('N', xy=(0.95, 0.93), xytext=(0.95, 0.85), arrowprops=dict(facecolor='black', width=4), ha='center', va='center', fontsize=12, fontweight='bold', xycoords=right_map.transAxes)
+right_map.plot([map_view_limit[0]+2000, map_view_limit[0]+12000], [map_view_limit[1], map_view_limit[1]], color='k', lw=3, transform=ccrs.Mercator()) 
+right_map.text(map_view_limit[0]+7000, map_view_limit[1]+500, "10 km", ha='center', fontweight='bold', transform=ccrs.Mercator())
+
+
 
 # --- NO CODE BELOW HERE ---
 
