@@ -20,7 +20,7 @@ from shapely.geometry import Point, Polygon, MultiPolygon
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
-
+import contextily as cx
 #basic rule
 map_standard = "EPSG:3857"
 
@@ -79,7 +79,17 @@ redistributed_result = combined_data.copy().set_geometry(final_new_dots)#update 
 #output
 #big map to compare
 fig, (left_map, right_map) = plt.subplots(1, 2, figsize=(24, 12), subplot_kw={'projection': ccrs.Mercator()}) 
-map_view_limit = city_districts.total_bounds #extension   
+map_view_limit = city_districts.total_bounds #extension
+
+# beautify
+def make_map_pretty(ax, main_title): 
+    #make buffer
+    ax.set_extent([map_view_limit[0]-2000, map_view_limit[2]+2000, map_view_limit[1]-2000, map_view_limit[3]+2000], crs=ccrs.Mercator())
+    # add light city background
+    cx.add_basemap(ax, crs=map_standard, source=cx.providers.CartoDB.Positron) 
+    #add roi line & titiel
+    city_districts.plot(ax=ax, facecolor='none', edgecolor='#444444', lw=1, zorder=3) # draw roi line
+    ax.set_title(main_title, fontsize=16, fontweight='bold', pad=15)   
         
         
 # --- NO CODE BELOW HERE ---
