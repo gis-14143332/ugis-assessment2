@@ -32,8 +32,7 @@ from matplotlib.lines import Line2D
 #basic rule
 map_standard = "EPSG:3857"
 
-
-#find data
+#find data relative path
 my_data_folder = os.path.dirname(os.path.abspath(__file__)) #find which file this code in
 def find_my_file(name): 
     return os.path.join(my_data_folder, 'data', 'wr', name) 
@@ -48,8 +47,8 @@ def make_random_dot(area_shape):
 #check this point's population data
 def look_at_population(p, raster_file, raster_data): 
     try:
-        row, col = raster_file.index(p.x, p.y) # transfer longtitude&lattitude to xy
-        # check number
+        row, col = raster_file.index(p.x, p.y) # transfer xy to row,col in raster
+        # check number,not negative
         if 0 <= row < raster_file.height and 0 <= col < raster_file.width:
             return max(0, float(raster_data[row, col])) 
         return 0.0
@@ -61,9 +60,9 @@ def shape_to_drawing_path(area_shape):
     all_parts = [area_shape] if isinstance(area_shape, Polygon) else area_shape.geoms 
     points_list, move_codes = [], [] # put coordination and drawing instruction
     for part in all_parts:
-        points_list.extend(list(zip(*part.exterior.coords.xy))) #record outside frame' coordination
-        move_codes.extend([Path.MOVETO] + [Path.LINETO] * (len(part.exterior.coords.xy[0]) - 1))
-   
+        points_list.extend(list(zip(*part.exterior.coords.xy))) #record outside frame's coordination
+        #move to start point then next point
+        move_codes.extend([Path.MOVETO] + [Path.LINETO] * (len(part.exterior.coords.xy[0]) - 1)) 
     return Path(points_list, move_codes) 
 
 # load roi and tweet data ,standardize coordinates
@@ -78,7 +77,7 @@ random.seed(42)
 how_many_dots = 20 # every tweet generate radom points
 with rasterio.open(find_my_file("100m_pop_2019.tif")) as pop_img: 
     pop_values = pop_img.read(1) # read picture first layer's data
-    for _, each_row in combined_data.iterrows():
+    for _, each_row in combined_data.iterrows(): #Iterate every tweet
         this_area = city_districts.loc[each_row['index_right']].geometry # find the rigion this tweet in
         # generate points for each tweet, choose the one with highest population density
         best_candidates = [(p, look_at_population(p, pop_img, pop_values)) for p in [make_random_dot(this_area) for _ in range(how_many_dots)]]
@@ -92,7 +91,7 @@ map_view_limit = city_districts.total_bounds #extension
 
 # beautify
 def make_map_pretty(ax, main_title): 
-    #make buffer
+    #make buffer02000m
     ax.set_extent([map_view_limit[0]-2000, map_view_limit[2]+2000, map_view_limit[1]-2000, map_view_limit[3]+2000], crs=ccrs.Mercator())
     # add light city background
     cx.add_basemap(ax, crs=map_standard, source=cx.providers.CartoDB.Positron) 
@@ -142,10 +141,11 @@ right_map.text(map_view_limit[0]+7000, map_view_limit[1]+500, "10 km", ha='cente
 legend_items = [Line2D([0], [0], marker='x', color='#00008B', linestyle='None', ms=10, label='False Hotspot'),
                 Line2D([0], [0], marker='o', color='#2c2c2c', linestyle='None', ms=5, alpha=0.5, label='Restributed Points'),
                 Line2D([0], [0], color='#ff4d4d', lw=8, label='Intrerest Density Surface')]
-right_map.legend(handles=legend_items, loc='upper left', frameon=True) # left up corner
-
+# place at left up corner
+right_map.legend(handles=legend_items, loc='upper left', frameon=True) 
+#auto adjustment
 plt.tight_layout()
-# save
+# save&output
 plt.savefig(os.path.join(my_data_folder, "final_analysis.png"), dpi=300, bbox_inches='tight') 
 plt.show() 
 
