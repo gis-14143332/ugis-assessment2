@@ -26,6 +26,8 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import PathPatch
 import seaborn as sns
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.lines import Line2D
+
 
 #basic rule
 map_standard = "EPSG:3857"
@@ -134,6 +136,15 @@ redistributed_result.plot(ax=right_map, color='#2c2c2c', markersize=1.5, alpha=0
 right_map.annotate('N', xy=(0.95, 0.93), xytext=(0.95, 0.85), arrowprops=dict(facecolor='black', width=4), ha='center', va='center', fontsize=12, fontweight='bold', xycoords=right_map.transAxes)
 right_map.plot([map_view_limit[0]+2000, map_view_limit[0]+12000], [map_view_limit[1], map_view_limit[1]], color='k', lw=3, transform=ccrs.Mercator()) 
 right_map.text(map_view_limit[0]+7000, map_view_limit[1]+500, "10 km", ha='center', fontweight='bold', transform=ccrs.Mercator())
+
+# legend
+legend_items = [Line2D([0], [0], marker='x', color='#00008B', linestyle='None', ms=10, label='False Hotspot'),
+                Line2D([0], [0], marker='o', color='#2c2c2c', linestyle='None', ms=5, alpha=0.5, label='Restributed Points'),
+                Line2D([0], [0], color='#ff4d4d', lw=8, label='Intrerest Density Surface')]
+right_map.legend(handles=legend_items, loc='upper left', frameon=True) # left up corner
+
+
+
 
 
 
