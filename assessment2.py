@@ -13,7 +13,7 @@ start_time = perf_counter()
 ''' --- ALL CODE MUST BE INSIDE HERE --- '''
 #import
 import os
-import geopandas
+import geopandas as gpd
 import rasterio
 import random
 from shapely.geometry import Point, Polygon, MultiPolygon
@@ -54,6 +54,10 @@ def shape_to_drawing_path(area_shape):
         points_list.extend(list(zip(*part.exterior.coords.xy))) #record outside frame' coordination
         move_codes.extend([Path.MOVETO] + [Path.LINETO] * (len(part.exterior.coords.xy[0]) - 1))
     return Path(points_list, move_codes) 
+
+# load roi and tweet data ,standardize coordinates
+city_districts = gpd.read_file(find_my_file("gm-districts.shp")).to_crs(map_standard) 
+twitter_data = gpd.read_file(find_my_file("level3-tweets-subset.shp")).to_crs(map_standard) 
 
 # --- NO CODE BELOW HERE ---
 
