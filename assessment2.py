@@ -17,6 +17,7 @@ import geopandas
 import rasterio
 import random
 from shapely.geometry import Point, Polygon, MultiPolygon
+from matplotlib.path import Path
 
 #basic rule
 map_standard = "EPSG:3857"
@@ -43,6 +44,16 @@ def look_at_population(p, raster_file, raster_data):
             return max(0, float(raster_data[row, col])) 
         return 0.0
     except: return 0.0 #if wrong
+    
+# convert map shape to drawing path,make rigion of interest
+def shape_to_drawing_path(area_shape): 
+    # multipul blocks
+    all_parts = [area_shape] if isinstance(area_shape, Polygon) else area_shape.geoms 
+    points_list, move_codes = [], [] # put coordination and drawing instruction
+    for part in all_parts:
+        points_list.extend(list(zip(*part.exterior.coords.xy))) #record outside frame' coordination
+        move_codes.extend([Path.MOVETO] + [Path.LINETO] * (len(part.exterior.coords.xy[0]) - 1))
+    return Path(points_list, move_codes) 
 
 # --- NO CODE BELOW HERE ---
 
