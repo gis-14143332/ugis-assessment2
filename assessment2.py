@@ -58,7 +58,24 @@ def shape_to_drawing_path(area_shape):
 # load roi and tweet data ,standardize coordinates
 city_districts = gpd.read_file(find_my_file("gm-districts.shp")).to_crs(map_standard) 
 twitter_data = gpd.read_file(find_my_file("level3-tweets-subset.shp")).to_crs(map_standard) 
+# spatial joint, find which district every tweet belongs to
+combined_data = gpd.sjoin(twitter_data, city_districts, how="inner", predicate="within") 
+final_new_dots = []
 
+# open population density file
+how_many_dots = 20 # every tweet generate radom points
+with rasterio.open(find_my_file("100m_pop_2019.tif")) as pop_img: 
+    pop_values = pop_img.read(1) # read picture first layer's data
+    for _, each_row in combined_data.iterrows():
+        this_area = city_districts.loc[each_row['index_right']].geometry # find the rigion this tweet in
+        # generate points for each tweet, choose the one with highest population density
+        best_candidates = [(p, look_at_population(p, pop_img, pop_values)) for p in [make_random_dot(this_area) for _ in range(how_many_dots)]]
+        final_new_dots.append(max(best_candidates, key=lambda x: x[1])[0]) # choose the point with highest weight
+        
+        
+        
+        
+        
 # --- NO CODE BELOW HERE ---
 
 # report runtime
