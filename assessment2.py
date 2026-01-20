@@ -72,7 +72,7 @@ with rasterio.open(find_my_file("100m_pop_2019.tif")) as pop_img:
         best_candidates = [(p, look_at_population(p, pop_img, pop_values)) for p in [make_random_dot(this_area) for _ in range(how_many_dots)]]
         final_new_dots.append(max(best_candidates, key=lambda x: x[1])[0]) # choose the point with highest weight
         
-        
+redistributed_result = combined_data.copy().set_geometry(final_new_dots)#update new coordination       
         
         
         
