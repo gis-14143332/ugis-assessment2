@@ -127,6 +127,8 @@ plt.colorbar(plt.cm.ScalarMappable(cmap=red_color_map), cax=color_axis, label='E
 # restrain to roi
 for collection in kde_surface.collections + right_map.collections: 
     collection.set_clip_path(clipping_mask) 
+# add redistributed plots on hotspot
+redistributed_result.plot(ax=right_map, color='#2c2c2c', markersize=1.5, alpha=0.4, zorder=5) 
 
 
 # --- NO CODE BELOW HERE ---
