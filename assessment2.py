@@ -110,7 +110,7 @@ make_map_pretty(left_map, "A. Original Data: False Hotspots")
 twitter_data.plot(ax=left_map, color='#00008B', markersize=40, marker='x', alpha=0.8, zorder=6) 
         
 # right map: redistribute
-make_map_pretty(right_map, "B.Redistributed Surface(Weighted Aalysis)")
+make_map_pretty(right_map, "B.Redistributed Surface(Weighted Analysis)")
 
 red_color_map = LinearSegmentedColormap.from_list("MyReds", ["#ffffff", "#ffcccc", "#ff4d4d"]) 
 #mask clip
@@ -118,13 +118,13 @@ clipping_mask = PathPatch(shape_to_drawing_path(city_districts.geometry.unary_un
 right_map.add_patch(clipping_mask) 
 
 # Filled thermal surface,30 levels
-kde_surface = sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y, ax=right_map, fill=True, levels=30, cmap=red_color_map, alpha=0.9, zorder=2)
+kde_surface = sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y, ax=right_map, fill=True, levels=30, cmap=red_color_map, alpha=0.9, zorder=2, bw_adjust=0.6)
 # contour lines
 sns.kdeplot(x=redistributed_result.geometry.x, y=redistributed_result.geometry.y, ax=right_map, fill=False, levels=30, color='#DE6954', lw=0.5, alpha=0.6, zorder=2.5)
 
 # strech bar
 color_axis = make_axes_locatable(right_map).append_axes("right", size="3%", pad=0.1, axes_class=plt.Axes)
-plt.colorbar(plt.cm.ScalarMappable(cmap=red_color_map), cax=color_axis, label='Estimated Interes Density') 
+plt.colorbar(plt.cm.ScalarMappable(cmap=red_color_map), cax=color_axis, label='Estimated Interest Density') 
 
 # restrain to roi
 for collection in kde_surface.collections + right_map.collections: 
@@ -139,7 +139,7 @@ right_map.text(map_view_limit[0]+7000, map_view_limit[1]+500, "10 km", ha='cente
 
 # legend
 legend_items = [Line2D([0], [0], marker='x', color='#00008B', linestyle='None', ms=10, label='False Hotspot'),
-                Line2D([0], [0], marker='o', color='#2c2c2c', linestyle='None', ms=5, alpha=0.5, label='Restributed Points'),
+                Line2D([0], [0], marker='o', color='#2c2c2c', linestyle='None', ms=5, alpha=0.5, label='Redistributed Points'),
                 Line2D([0], [0], color='#ff4d4d', lw=8, label='Intrerest Density Surface')]
 # place at left up corner
 right_map.legend(handles=legend_items, loc='upper left', frameon=True) 
